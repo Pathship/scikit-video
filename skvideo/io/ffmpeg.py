@@ -157,9 +157,6 @@ class FFmpegReader():
 
         if israw != 0:
             inputdict['-pix_fmt'] = self.pix_fmt
-        else:
-            # check that the extension makes sense
-            assert str.encode(self.extension).lower() in _FFMPEG_SUPPORTED_DECODERS, "Unknown decoder extension: " + self.extension.lower()
 
         self._filename = filename
 
