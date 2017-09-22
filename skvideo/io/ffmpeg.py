@@ -79,13 +79,9 @@ class FFmpegReader():
         if not outputdict:
             outputdict = {}
 
-        # General information
-        _, self.extension = os.path.splitext(filename)
-
         # smartphone video data is weird
         self.rotationAngle = '0'
 
-        self.size = os.path.getsize(filename)
         self.probeInfo = ffprobe(filename)
 
         viddict = {}
@@ -150,16 +146,10 @@ class FFmpegReader():
         self.inputdepth = np.int(bpplut[self.pix_fmt][0])
         self.bpp = np.int(bpplut[self.pix_fmt][1])
 
-        if (str.encode(self.extension) in [b".raw", b".yuv"]):
-            israw = 1
-
         if ("-vframes" in outputdict):
             self.inputframenum = np.int(outputdict["-vframes"])
         elif ("@nb_frames" in viddict):
             self.inputframenum = np.int(viddict["@nb_frames"])
-        elif israw == 1:
-            # we can compute it based on the input size and color space
-            self.inputframenum = np.int(self.size / (self.inputwidth * self.inputheight * (self.bpp/8.0)))
         else:
             self.inputframenum = -1
             if verbosity != 0:
